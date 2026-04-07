@@ -1,0 +1,64 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  /* Brand Colors Map */
+  --color-primary: oklch(0.45 0.18 340); /* Bordeaux/Deep Pink */
+  --color-secondary: oklch(0.70 0.12 85); /* Ochre/Gold */
+  --color-background: #F2E8DD; /* Exact match with logo.jpg background */
+  
+  --background: #F2E8DD;
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.45 0.18 340); /* Bordeaux */
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.70 0.12 85); /* Ochre */
+  --secondary-foreground: oklch(0.205 0 0);
+  --color-border: oklch(0.9 0 0 / 10%);
+  --color-foreground: oklch(0.145 0 0);
+  --color-muted: #EDE3DA;
+  --color-ring: oklch(0.45 0.18 340 / 50%);
+  
+  --radius-lg: 0.5rem;
+  --radius-md: calc(0.5rem - 2px);
+  --radius-sm: calc(0.5rem - 4px);
+
+  --font-sans: "Roboto", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: var(--font-sans);
+  }
+}
+
+:root {
+  --background: #F2E8DD;
+  --foreground: oklch(0.15 0 0);
+  --primary: oklch(0.45 0.18 340);
+  --secondary: oklch(0.70 0.12 85);
+  --muted: #EDE3DA;
+  --accent: oklch(0.45 0.18 340);
+  --border: oklch(0.9 0 0 / 10%);
+  --input: oklch(0.9 0 0 / 10%);
+  --ring: oklch(0.45 0.18 340 / 50%);
+}
+
+.dark {
+  --background: oklch(0.15 0 0);
+  --foreground: oklch(0.98 0.01 70);
+  --primary: oklch(0.98 0.01 70);
+  --secondary: oklch(0.3 0 0);
+}
