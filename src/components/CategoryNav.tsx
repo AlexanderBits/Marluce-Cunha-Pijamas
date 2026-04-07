@@ -2,36 +2,37 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { getAssetPath } from "@/lib/utils";
 
 const categories = [
   {
     id: 1,
     name: "Mundo Dino",
-    image: "/images/products/dino.png",
+    image: getAssetPath("/images/products/dino.png"),
     slug: "dino",
   },
   {
     id: 2,
     name: "Corações",
-    image: "/images/products/hearts.png",
+    image: getAssetPath("/images/products/hearts.png"),
     slug: "hearts",
   },
   {
     id: 3,
     name: "Linha Pets",
-    image: "/images/products/dalmatas.png",
+    image: getAssetPath("/images/products/dalmatas.png"),
     slug: "pets",
   },
   {
     id: 4,
     name: "Coleção Kids",
-    image: "/images/products/mickey-blue.png",
+    image: getAssetPath("/images/products/mickey-blue.png"),
     slug: "kids",
   },
   {
     id: 5,
     name: "Cores Premium",
-    image: "/images/products/white-premium.png",
+    image: getAssetPath("/images/products/white-premium.png"),
     slug: "premium",
   },
 ];
