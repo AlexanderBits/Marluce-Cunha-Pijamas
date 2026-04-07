@@ -5,32 +5,32 @@ import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, getAssetPath } from "@/lib/utils";
 
 const slides = [
   {
-    image: "/images/hero/hero_dino_sus.png",
+    image: getAssetPath("/images/hero/hero_dino_sus.png"),
     title: "PIJAMA HOSPITALAR",
     content: "CONFORTO E QUALIDADE PARA O SEU DIA A DIA NO SUS",
     buttonText: "VER MODELOS",
     align: "left",
   },
   {
-    image: "/images/hero/hero_hearts_sus.png",
+    image: getAssetPath("/images/hero/hero_hearts_sus.png"),
     title: "PIJAMA DE HOSPITAL",
     content: "ESTILO E DURABILIDADE EM CADA PLANTÃO",
     buttonText: "COMPRAR AGORA",
     align: "right",
   },
   {
-    image: "/images/hero/hero_white_sus.png",
+    image: getAssetPath("/images/hero/hero_white_sus.png"),
     title: "PIJAMA HOSPITALAR PIJAMA ENFERMAGEM",
     content: "O CLÁSSICO BRANCO COM TECIDO PREMIUM",
     buttonText: "VER DETALHES",
     align: "left",
   },
   {
-    image: "/images/hero/hero_pink_sus.png",
+    image: getAssetPath("/images/hero/hero_pink_sus.png"),
     title: "PIJAMA ENFERMAGEM",
     content: "COLEÇÃO PREMIUM PARA PROFISSIONAIS DA SAÚDE",
     buttonText: "COMPRAR",

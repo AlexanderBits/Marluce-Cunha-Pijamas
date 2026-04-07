@@ -17,10 +17,14 @@ import {
   CloseIcon,
   ChevronDown
 } from "@/components/icons";
+import { useCart } from "@/hooks/useCart";
+
+import { getAssetPath } from "@/lib/utils";
 
 export const Header = () => {
   const [isSticky, setIsSticky] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { totalItems } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,7 +68,7 @@ export const Header = () => {
             <div className="relative h-[180px] w-[180px] flex-shrink-0">
               <Link href="/" className="relative block w-full h-full">
                 <Image 
-                  src="/images/logo.png" 
+                  src={getAssetPath("/images/logo.png")} 
                   alt="Ateliê Cunha Logo" 
                   fill 
                   className="object-contain mix-blend-multiply"
@@ -93,13 +97,17 @@ export const Header = () => {
                 <UserIcon className="w-6 h-6 text-[#8B1D5B] group-hover:scale-110 transition-transform" />
                 <span className="hidden lg:block text-[10px] text-[#8B1D5B] mt-1 font-bold uppercase tracking-tighter">Conta</span>
               </div>
-              <div className="flex flex-col items-center cursor-pointer group relative">
+              <Link href="/cart" className="flex flex-col items-center cursor-pointer group relative">
                 <div className="relative">
                   <CartIcon className="w-6 h-6 text-[#8B1D5B] group-hover:scale-110 transition-transform" />
-                  <span className="absolute -top-2 -right-2 bg-[#8B1D5B] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                  {totalItems > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-[#8B1D5B] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold animate-in zoom-in duration-300">
+                      {totalItems}
+                    </span>
+                  )}
                 </div>
                 <span className="hidden lg:block text-[10px] text-[#8B1D5B] mt-1 font-bold uppercase tracking-tighter">Carrinho</span>
-              </div>
+              </Link>
             </div>
           </div>
 

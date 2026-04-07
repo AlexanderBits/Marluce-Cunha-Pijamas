@@ -1,6 +1,8 @@
 // Ateliê Cunha - Rebranding Version
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
+import { CartProvider } from "@/hooks/useCart";
+import { Footer } from "@/components/Footer";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -24,7 +26,11 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${roboto.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <CartProvider>
+          {children}
+        </CartProvider>
+      </body>
     </html>
   );
 }
