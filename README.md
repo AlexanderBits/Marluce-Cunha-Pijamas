@@ -1,5 +1,3 @@
-Aqui está uma versão adaptada do texto para o seu repositório, focada na marca Marluce Cunha Pijamas, mantendo a estrutura técnica mas removendo referências genéricas ou de outras marcas:
-
 Marluce Cunha Pijamas - E-commerce Store
 <a href="https://www.google.com/search?q=LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License" /></a>
 <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-15+-black" alt="Next.js" /></a>
