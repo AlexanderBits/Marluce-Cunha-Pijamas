@@ -10,7 +10,21 @@ const checkoutSchema = z.object({
     quantity: z.number().positive(),
     unit_price: z.number().positive(),
   })).min(1),
-  email: z.string().email().optional(),
+  buyer: z.object({
+    name: z.string().min(1),
+    email: z.string().email(),
+    phone: z.string().optional(),
+    cpf: z.string().optional(),
+  }),
+  address: z.object({
+    cep: z.string().min(8),
+    logradouro: z.string().min(1),
+    numero: z.string().min(1),
+    complemento: z.string().optional(),
+    bairro: z.string().min(1),
+    cidade: z.string().min(1),
+    estado: z.string().min(2).max(2),
+  }),
 });
 
 export async function POST(request: Request) {
@@ -18,17 +32,22 @@ export async function POST(request: Request) {
     const body = await request.json();
     const validation = checkoutSchema.safeParse(body);
     if (!validation.success) {
-      return NextResponse.json({ error: 'Dados de checkout inválidos' }, { status: 400 });
+      console.error('Validation Error:', validation.error.format());
+      return NextResponse.json({ error: 'Dados de checkout inválidos', details: validation.error.format() }, { status: 400 });
     }
 
-    const { items, email } = validation.data;
+    const { items, buyer, address } = validation.data;
     const totalAmount = items.reduce((sum, i) => sum + i.unit_price * i.quantity, 0);
 
     // 1. Create purchase in DB
     const purchase = await createPurchase({
-      user_email: email || 'pendente@checkout',
+      buyer_email: buyer.email,
       status: 'pending',
       total_amount: totalAmount,
+      buyer_name: buyer.name,
+      buyer_phone: buyer.phone,
+      buyer_cpf: buyer.cpf,
+      ...address,
     });
 
     // 2. Create purchase items in DB
@@ -44,7 +63,7 @@ export async function POST(request: Request) {
     const mpPreference = await createPreference({
       items, 
       purchaseId: purchase.id, 
-      buyerEmail: email,
+      buyerEmail: buyer.email,
     });
 
     // 4. Update purchase with preference ID
@@ -57,8 +76,11 @@ export async function POST(request: Request) {
       initPoint: mpPreference.init_point,
       purchaseId: purchase.id,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Erro no Checkout:', error);
-    return NextResponse.json({ error: 'Falha ao processar o checkout' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Falha ao processar o checkout', 
+      message: error.message 
+    }, { status: 500 });
   }
 }

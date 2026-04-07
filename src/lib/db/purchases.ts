@@ -1,17 +1,38 @@
 import { supabase } from '../supabase';
 
 export interface PurchaseInsert {
-  user_email: string;
+  buyer_email: string;
   status: 'pending';
   total_amount: number;
+  
+  // Buyer Info
+  buyer_name?: string;
+  buyer_phone?: string;
+  buyer_cpf?: string;
+  
+  // Address Info
+  cep?: string;
+  logradouro?: string;
+  numero?: string;
+  complemento?: string;
+  bairro?: string;
+  cidade?: string;
+  estado?: string;
 }
 
 export interface PurchaseUpdate {
   status?: 'pending' | 'approved' | 'rejected';
   mercadopago_payment_id?: string;
   mercadopago_preference_id?: string;
-  user_email?: string;
+  buyer_email?: string;
   updated_at?: string;
+  
+  // Optional updates for buyer/address
+  buyer_name?: string;
+  buyer_phone?: string;
+  cep?: string;
+  logradouro?: string;
+  numero?: string;
 }
 
 export async function createPurchase(data: PurchaseInsert) {
@@ -21,7 +42,10 @@ export async function createPurchase(data: PurchaseInsert) {
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+    console.error('Database detailed error:', error);
+    throw error;
+  }
   return purchase;
 }
 

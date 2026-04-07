@@ -5,6 +5,7 @@ import { Suspense, useCallback, useEffect, useState } from 'react';
 import { Header } from "@/components/Header";
 import { useCart } from "@/hooks/useCart";
 import { Button } from "@/components/ui/button";
+import { getAssetPath } from "@/lib/utils";
 import Link from "next/link";
 
 type Status = 'loading' | 'approved' | 'pending' | 'rejected' | 'error';
@@ -17,7 +18,7 @@ function PaymentResult() {
 
   const verify = useCallback(async (id: string) => {
     try {
-      const res = await fetch(`/api/purchases/${id}`);
+      const res = await fetch(getAssetPath(`/api/purchases/${id}`));
       if (!res.ok) { setStatus('error'); return; }
       const { status } = await res.json();
       

@@ -1,29 +1,74 @@
--- seed.sql
--- Run this in the Supabase SQL Editor (https://supabase.com/dashboard/project/bbyumylxcpkadxdlloay/sql)
--- This will populate your categories and products for Ateliê Cunha.
+-- 20260407000001_initial_schema.sql
+-- Initial schema for Ateliê Cunha E-commerce
+-- Includes categories and products with RLS policies.
 
--- 1. Insert Initial Category
-INSERT INTO public.categories (name, slug, image_url)
-VALUES ('Pijamas Hospitalares', 'pijamas-hospitalares', '/images/categories/hospitalar.jpg')
+-- 1. Create categories table
+CREATE TABLE IF NOT EXISTS public.categories (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,
+  image_url TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE public.categories ENABLE ROW LEVEL SECURITY;
+
+-- Read policy: Anyone can see categories
+CREATE POLICY IF NOT EXISTS "categories_read_all"
+  ON public.categories FOR SELECT
+  USING (true);
+
+-- Admin policy: Full access for managing categories
+CREATE POLICY IF NOT EXISTS "categories_admin_all"
+  ON public.categories FOR ALL
+  USING (true)
+  WITH CHECK (true);
+
+-- 2. Create products table
+CREATE TABLE IF NOT EXISTS public.products (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  category_id UUID REFERENCES public.categories(id) ON DELETE SET NULL,
+  title TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,
+  description TEXT,
+  price DECIMAL(10, 2) NOT NULL,
+  image_url TEXT,
+  is_new BOOLEAN DEFAULT FALSE,
+  stock INTEGER DEFAULT 0,
+  installments TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE public.products ENABLE ROW LEVEL SECURITY;
+
+-- Read policy: Anyone can see products
+CREATE POLICY IF NOT EXISTS "products_read_all"
+  ON public.products FOR SELECT
+  USING (true);
+
+-- Admin policy: Full access for managing products
+CREATE POLICY IF NOT EXISTS "products_admin_all"
+  ON public.products FOR ALL
+  USING (true)
+  WITH CHECK (true);
+
+-- Index for better performance
+CREATE INDEX IF NOT EXISTS idx_products_category_id ON public.products(category_id);
+
+-- 3. Seed initial data
+INSERT INTO public.categories (name, slug, image_url) VALUES
+('Mundo Dino', 'dino', '/images/products/dino.png'),
+('Corações', 'hearts', '/images/products/hearts.png'),
+('Linha Pets', 'pets', '/images/products/dalmatas.png'),
+('Coleção Kids', 'kids', '/images/products/mickey-blue.png'),
+('Cores Premium', 'premium', '/images/products/white-premium.png')
 ON CONFLICT (slug) DO NOTHING;
 
--- 2. Get the Category ID (Helper for the next inserts)
-DO $$
-DECLARE
-    cat_id UUID;
-BEGIN
-    SELECT id INTO cat_id FROM public.categories WHERE slug = 'pijamas-hospitalares' LIMIT 1;
-
-    -- 3. Insert Products
-    INSERT INTO public.products (category_id, title, slug, price, installments, image_url, is_new, stock)
-    VALUES 
-    (cat_id, 'Pijama Hospitalar Dino Blue - Confort Premium', 'pijama-dino-blue', 189.90, '10x de R$ 18,99', '/images/products/dino.png', true, 50),
-    (cat_id, 'Pijama Hospitalar Hearts Pink - Coleção Delicadeza', 'pijama-hearts-pink', 199.90, '10x de R$ 19,99', '/images/products/hearts.png', true, 50),
-    (cat_id, 'Pijama Hospitalar Branco Neve - Linha Premium Elite', 'pijama-branco-neve', 219.90, '10x de R$ 21,99', '/images/products/white-premium.png', false, 30),
-    (cat_id, 'Pijama Hospitalar Rosa Suave - Toque de Seda', 'pijama-rosa-suave', 195.90, '10x de R$ 19,59', '/images/products/pink-premium.jpg', false, 40),
-    (cat_id, 'Pijama Hospitalar Mickey Blue - Kids Care Edition', 'pijama-mickey-blue', 189.90, '10x de R$ 18,99', '/images/products/mickey-blue.png', true, 25),
-    (cat_id, 'Pijama Hospitalar Gatinhos Lilás - Coleção Joy', 'pijama-gatinhos-lilas', 189.90, '10x de R$ 18,99', '/images/products/cats-purple.jpg', true, 35),
-    (cat_id, 'Pijama Hospitalar Dálmatas - Edição Especial Pediatria', 'pijama-dalmatas', 189.90, '10x de R$ 18,99', '/images/products/dalmatas.png', false, 20),
-    (cat_id, 'Pijama Hospitalar Powerpuff Girls - Linda, Doce e Forte', 'pijama-powerpuff-girls', 199.90, '10x de R$ 19,99', '/images/products/powerpuff.png', true, 15)
-    ON CONFLICT (slug) DO NOTHING;
-END $$;
+INSERT INTO public.products (title, slug, price, image_url, is_new, installments) VALUES
+('Pijama Hospitalar Dino Rosa', 'pijama-dino-rosa', 189.90, '/images/products/dino.png', true, '10x de R$ 18,99'),
+('Pijama Hospitalar Corações Azul', 'pijama-hearts-blue', 179.90, '/images/products/hearts.png', false, '10x de R$ 17,99'),
+('Pijama Hospitalar Dalmátas', 'pijama-dalmatas', 199.90, '/images/products/dalmatas.png', true, '10x de R$ 19,99'),
+('Pijama Hospitalar Premium Branco', 'pijama-premium-branco', 249.90, '/images/products/white-premium.png', true, '10x de R$ 24,99')
+ON CONFLICT (slug) DO NOTHING;
