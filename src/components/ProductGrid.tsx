@@ -30,9 +30,29 @@ export function ProductGrid() {
 
   if (loading) {
     return (
-      <div className="py-16 flex justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#8B1D5B]"></div>
+      <div className="py-20 flex flex-col items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#8B1D5B] mb-4"></div>
+        <p className="text-[#8B1D5B]/60 text-xs font-bold uppercase tracking-widest animate-pulse">Carregando Vitrine...</p>
       </div>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <section className="py-20 px-4 max-w-7xl mx-auto text-center border-2 border-dashed border-[#8B1D5B]/10 rounded-3xl my-10 bg-white/50">
+        <div className="mb-6 flex justify-center">
+          <div className="bg-[#8B1D5B]/10 p-4 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8B1D5B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+        </div>
+        <h2 className="text-xl font-black text-[#8B1D5B] uppercase tracking-widest mb-2">Nenhum produto encontrado</h2>
+        <p className="text-gray-500 text-sm max-w-md mx-auto mb-8 font-medium">
+          A vitrine está vazia. Certifique-se de executar o script de inicialização do banco de dados no painel do Supabase.
+        </p>
+        <div className="bg-[#8B1D5B] text-white p-4 rounded-xl inline-block text-[10px] font-mono tracking-tighter opacity-80">
+          Dica: Rode o arquivo supabase/seed.sql no seu SQL Editor
+        </div>
+      </section>
     );
   }
   return (
